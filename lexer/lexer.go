@@ -33,27 +33,28 @@ func (l *Lexer) NextToken() token.Token {
 
 	l.skipWhitespace()
 
-	switch l.ch {
-	case '=':
-		tok = token.NewToken(token.ASSIGN, l.ch)
-	case ';':
-		tok = token.NewToken(token.SEMICOLON, l.ch)
-	case '(':
-		tok = token.NewToken(token.LPAREN, l.ch)
-	case ')':
-		tok = token.NewToken(token.RPAREN, l.ch)
-	case ',':
-		tok = token.NewToken(token.COMMA, l.ch)
-	case '+':
-		tok = token.NewToken(token.PLUS, l.ch)
-	case '{':
-		tok = token.NewToken(token.LBRACE, l.ch)
-	case '}':
-		tok = token.NewToken(token.RBRACE, l.ch)
-	case 0:
+	if l.ch == '=' {
+		if l.peekChar() == '=' {
+			ch := l.ch
+			l.readChar()
+			tok = token.Token{Type: token.EQ, Literal: string(ch) + string(l.ch)}
+		} else {
+			tok = token.NewToken(token.ASSIGN, l.ch)
+		}
+	} else if l.ch == '!' {
+		if l.peekChar() == '=' {
+			ch := l.ch
+			l.readChar()
+			tok = token.Token{Type: token.NOT_EQ, Literal: string(ch) + string(l.ch)}
+		} else {
+			tok = token.NewToken(token.BANG, l.ch)
+		}
+	} else if isSimple(l.ch) {
+		tok = token.NewToken(token.SimpleTokens[l.ch], l.ch)
+	} else if l.ch == 0 {
 		tok.Literal = ""
 		tok.Type = token.EOF
-	default:
+	} else {
 		if isLetter(l.ch) {
 			tok.Literal = l.readIdentifier()
 			tok.Type = token.LookupIdent(tok.Literal)
@@ -69,6 +70,11 @@ func (l *Lexer) NextToken() token.Token {
 
 	l.readChar()
 	return tok
+}
+
+func isSimple(ch byte) bool {
+	_, ok := token.SimpleTokens[ch]
+	return ok
 }
 
 func isDigit(ch byte) bool {
@@ -99,4 +105,11 @@ func (l *Lexer) readNumber() string {
 		l.readChar()
 	}
 	return l.input[position:l.position]
+}
+
+func (l *Lexer) peekChar() byte {
+	if l.readPosition >= len(l.input) {
+		return 0
+	}
+	return l.input[l.readPosition]
 }
