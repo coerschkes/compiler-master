@@ -35,6 +35,7 @@ const (
 	IF        = "IF"
 	ELSE      = "ELSE"
 	RETURN    = "RETURN"
+	EXIT      = "EXIT"
 )
 
 var SimpleTokens = map[byte]TokenType{
@@ -62,6 +63,7 @@ var keywords = map[string]TokenType{
 	"if":     IF,
 	"else":   ELSE,
 	"return": RETURN,
+	"exit":   EXIT,
 }
 
 func NewToken(tokenType TokenType, ch byte) Token {

@@ -26,6 +26,8 @@ func TestNextToken(t *testing.T) {
 
 	10 == 10;
 	10 != 9;
+
+	exit 5;
 	`
 
 	tests := []struct {
@@ -105,10 +107,13 @@ func TestNextToken(t *testing.T) {
 		{token.NOT_EQ, "!="},
 		{token.INT, "9"},
 		{token.SEMICOLON, ";"},
+		{token.EXIT, "exit"},
+		{token.INT, "5"},
+		{token.SEMICOLON, ";"},
 		{token.EOF, ""},
 	}
 
-	l := NewLexer(input)
+	l := New(input)
 	for i, tt := range tests {
 		tok := l.NextToken()
 		if tok.Type != tt.expectedType {
