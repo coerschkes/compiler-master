@@ -35,25 +35,8 @@ const (
 	IF        = "IF"
 	ELSE      = "ELSE"
 	RETURN    = "RETURN"
-	EXIT      = "EXIT"
+	STRING    = "STRING"
 )
-
-var SimpleTokens = map[byte]TokenType{
-	'=': ASSIGN,
-	'+': PLUS,
-	',': COMMA,
-	';': SEMICOLON,
-	'(': LPAREN,
-	')': RPAREN,
-	'{': LBRACE,
-	'}': RBRACE,
-	'>': GREATER,
-	'<': LESS,
-	'-': MINUS,
-	'/': SLASH,
-	'*': ASTERISK,
-	'!': BANG,
-}
 
 var keywords = map[string]TokenType{
 	"fn":     FUNCTION,
@@ -63,11 +46,6 @@ var keywords = map[string]TokenType{
 	"if":     IF,
 	"else":   ELSE,
 	"return": RETURN,
-	"exit":   EXIT,
-}
-
-func NewToken(tokenType TokenType, ch byte) Token {
-	return Token{Type: tokenType, Literal: string(ch)}
 }
 
 func LookupIdent(ident string) TokenType {
