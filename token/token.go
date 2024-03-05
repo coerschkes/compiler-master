@@ -36,6 +36,8 @@ const (
 	ELSE      = "ELSE"
 	RETURN    = "RETURN"
 	STRING    = "STRING"
+	LBRACKET  = "["
+	RBRACKET  = "]"
 )
 
 var keywords = map[string]TokenType{
