@@ -180,6 +180,25 @@ func TestBooleanExpressions(t *testing.T) {
 	runCompilerTests(t, tests)
 }
 
+func TestConditionals(t *testing.T) {
+	tests := []compilerTestCase{{
+		input: `
+		if (true){ 10 }; 3333;
+		`,
+		expectedConstants: []interface{}{10, 3333},
+		expectedInstructions: []code.Instructions{
+			code.Make(code.OpTrue),
+			code.Make(code.OpJumpNotTruthy, 7),
+			code.Make(code.OpConstant, 0),
+			code.Make(code.OpPop),
+			code.Make(code.OpConstant, 1),
+			code.Make(code.OpPop),
+		},
+	},
+	}
+	runCompilerTests(t, tests)
+}
+
 func runCompilerTests(t *testing.T, tests []compilerTestCase) {
 	t.Helper()
 
@@ -214,7 +233,7 @@ func testInstructions(expected []code.Instructions, actual code.Instructions) er
 
 	for i, ins := range concatenated {
 		if actual[i] != ins {
-			return fmt.Errorf("wrong instruction at %d.\nwant=%q\ngot=%q", i, concatenated, actual)
+			return fmt.Errorf("wrong instructions at %d.\nwant=%q\ngot=%q", i, concatenated, actual)
 		}
 	}
 
