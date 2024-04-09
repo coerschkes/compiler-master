@@ -81,6 +81,7 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerInfix(token.LPAREN, p.parseCallExpression)
 	p.registerInfix(token.LBRACKET, p.parseIndexExpression)
 
+	//read two tokens to set cur and peek
 	p.nextToken()
 	p.nextToken()
 
